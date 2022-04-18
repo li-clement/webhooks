@@ -1,4 +1,4 @@
-module github.com/go-playground/webhooks/v6
+module github.com/robekeane/webhooks/v6
 
 go 1.15
 
