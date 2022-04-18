@@ -1,22 +1,13 @@
-Library webhooks
+Library webhooks with Gitee support
 ================
-<img align="right" src="https://raw.githubusercontent.com/go-playground/webhooks/v6/logo.png">![Project status](https://img.shields.io/badge/version-6.0.0-green.svg)
+![Project status](https://img.shields.io/badge/version-6.0.2-green.svg)
 [![Test](https://github.com/go-playground/webhooks/workflows/Test/badge.svg?branch=master)](https://github.com/go-playground/webhooks/actions)
 [![Coverage Status](https://coveralls.io/repos/go-playground/webhooks/badge.svg?branch=master&service=github)](https://coveralls.io/github/go-playground/webhooks?branch=master)
-[![Go Report Card](https://goreportcard.com/badge/go-playground/webhooks)](https://goreportcard.com/report/go-playground/webhooks)
-[![GoDoc](https://godoc.org/github.com/go-playground/webhooks/v6?status.svg)](https://godoc.org/github.com/go-playground/webhooks/v6)
+[![Go Report Card](https://goreportcard.com/badge/robekeane/webhooks)](https://goreportcard.com/report/robekeane/webhooks)
+[![GoDoc](https://godoc.org/github.com/robekeane/webhooks/v6?status.svg)](https://godoc.org/github.com/robekeane/webhooks/v6)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 
-Library webhooks allows for easy receiving and parsing of GitHub, Bitbucket and GitLab Webhook Events
-
-Features:
-
-* Parses the entire payload, not just a few fields.
-* Fields + Schema directly lines up with webhook posted json
-
-Notes:
-
-* Currently only accepting json payloads.
+Thanks for go-playground/webhooks, this is a fork project to add gitee support.
 
 Installation
 ------------
@@ -24,12 +15,12 @@ Installation
 Use go get.
 
 ```shell
-go get -u github.com/go-playground/webhooks/v6
+go get -u github.com/robekeane/webhooks/v6
 ```
 
 Then import the package into your own code.
 
-	import "github.com/go-playground/webhooks/v6"
+	import "github.com/robekeane/webhooks/v6"
 
 Usage and Documentation
 ------
@@ -45,7 +36,7 @@ import (
 
 	"net/http"
 
-	"github.com/go-playground/webhooks/v6/github"
+	"github.com/robekeane/webhooks/v6/gitee"
 )
 
 const (
@@ -53,39 +44,26 @@ const (
 )
 
 func main() {
-	hook, _ := github.New(github.Options.Secret("MyGitHubSuperSecretSecrect...?"))
+	hook, _ := gitee.New(gitee.Options.Secret("test12345"))
 
 	http.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
-		payload, err := hook.Parse(r, github.ReleaseEvent, github.PullRequestEvent)
+		payload, err := hook.Parse(r, gitee.IssuesEvents)
 		if err != nil {
-			if err == github.ErrEventNotFound {
-				// ok event wasn;t one of the ones asked to be parsed
+			if err == gitee.ErrEventNotFound {
 			}
 		}
 		switch payload.(type) {
 
-		case github.ReleasePayload:
-			release := payload.(github.ReleasePayload)
-			// Do whatever you want from here...
-			fmt.Printf("%+v", release)
-
-		case github.PullRequestPayload:
-			pullRequest := payload.(github.PullRequestPayload)
-			// Do whatever you want from here...
-			fmt.Printf("%+v", pullRequest)
+		case gitee.IssueEventPayload:
+			release := payload.(gitee.IssueEventPayload)
+			fmt.Printf("%+v", release.Issue.Title)
 		}
 	})
 	http.ListenAndServe(":3000", nil)
 }
 
+
 ```
-
-Contributing
-------
-
-Pull requests for other services are welcome!
-
-If the changes being proposed or requested are breaking changes, please create an issue for discussion.
 
 License
 ------
