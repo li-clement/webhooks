@@ -4,7 +4,7 @@ on:
       - master
   pull_request:
 
-name: Test
+name: TestMM
 jobs:
   lint:
     name: Lint
@@ -19,7 +19,7 @@ jobs:
           version: v2.1.3
 
   test:
-    name: Test
+    name: TestMM
     strategy:
       matrix:
         go-version: [1.14.x, 1.15.x]
